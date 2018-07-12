@@ -8,9 +8,17 @@ def deal_card
   return rand(1..11)
 end
 
-def display_card_total(card_total)
-  # code #display_card_total here
-  puts "Your cards add up to #{card_total}"
+def get_card_total(cards)
+  total = 0
+  cards.each do |card|
+    total += card
+  end
+end
+
+def display_cards_and_total(cards)
+  # code #display_cards here
+  card_total = get_card_total(cards)
+  puts "Cards: #{cards}, Total: #{card_total}"
 end
 
 def prompt_user
@@ -23,18 +31,17 @@ def get_user_input
   gets.chomp
 end
 
-def end_game(card_total)
+def end_game(cards)
   # code #end_game here
-  puts "Sorry, you hit #{card_total}. Thanks for playing!"
+  card_total = get_card_total(cards)
+  puts "Sorry, you busted with #{card_total}. Thanks for playing!"
 end
 
 def initial_round
   # code #initial_round here
   card1 = deal_card
   card2 = deal_card
-  sum = card1 + card2
-  display_card_total(sum)
-  return sum
+  return [card1, card2]
 end
 
 def hit?(card_total)
@@ -67,11 +74,15 @@ end
 def runner
   # code runner here
   welcome
-  card_total = initial_round
+  cards = initial_round
   while card_total <= 21
+    display_cards(card_total)
     card_total = hit?(card_total)
-    display_card_total(card_total)
   end
   end_game(card_total)
 end
-    
+  
+card1, card2 = initial_round
+
+puts card1
+puts card2
