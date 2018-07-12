@@ -5,14 +5,44 @@ end
 
 def deal_card
   # code #deal_card here
-  return rand(1..11)
+  card = rand(1..10)
+  
+  if card == 1
+    return "A"
+  elsif card == 10
+    case (rand(100)%3)
+      when 0
+        return "J"
+      when 1
+        return "Q"
+      when 2
+        return "K"
+      else
+        return "J"
+    end
+  else
+    return card
+  end
 end
 
 def get_card_total(cards)
   total = 0
   cards.each do |card|
-    total += card
+    case card
+      when "A"
+        total + 11 <= 21 ? total += 11 : total += 1
+      when "K"
+        total += 10
+      when "Q"
+        total += 10
+      when "J"
+        total += 10
+      else
+        total += card
+    end
   end
+  puts cards
+  return total
 end
 
 def display_cards_and_total(cards)
@@ -44,10 +74,11 @@ def initial_round
   return [card1, card2]
 end
 
-def hit?(card_total)
+def hit?(cards)
   # code hit? here
   prompt_user
   input = get_user_input
+  card_total = get_card_total(cards)
   
   if(input == "s")
     return card_total
@@ -55,10 +86,11 @@ def hit?(card_total)
   
   if(input == "h")
     new_card = deal_card
+    cards.append(new_card)
     card_total += new_card
   else
     invalid_command
-    hit?(card_total)
+    hit?(cards)
   end
 end
 
@@ -76,13 +108,11 @@ def runner
   welcome
   cards = initial_round
   while card_total <= 21
-    display_cards(card_total)
-    card_total = hit?(card_total)
+    display_cards(cards)
+    card_total = hit?(cards)
   end
   end_game(card_total)
 end
-  
-card1, card2 = initial_round
 
-puts card1
-puts card2
+total = get_card_total(["A","A","Q"])
+puts total
