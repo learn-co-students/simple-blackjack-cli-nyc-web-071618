@@ -27,10 +27,13 @@ end
 
 def get_card_total(cards)
   total = 0
+  has_A = false;
+  
   cards.each do |card|
     case card
       when "A"
-        total + 11 <= 21 ? total += 11 : total += 1
+        total += 1
+        has_A = true
       when "K"
         total += 10
       when "Q"
@@ -41,14 +44,18 @@ def get_card_total(cards)
         total += card
     end
   end
-  puts cards
+  
+  if(has_A == true && total + 10 <= 21)
+    total += 10
+  end
   return total
 end
 
 def display_cards_and_total(cards)
   # code #display_cards here
   card_total = get_card_total(cards)
-  puts "Cards: #{cards}, Total: #{card_total}"
+  puts "Cards: #{cards}"
+  puts "Total: #{card_total}"
 end
 
 def prompt_user
@@ -78,16 +85,14 @@ def hit?(cards)
   # code hit? here
   prompt_user
   input = get_user_input
-  card_total = get_card_total(cards)
   
   if(input == "s")
-    return card_total
+    return cards
   end
   
   if(input == "h")
     new_card = deal_card
-    cards.append(new_card)
-    card_total += new_card
+    cards.push(new_card)
   else
     invalid_command
     hit?(cards)
@@ -107,12 +112,13 @@ def runner
   # code runner here
   welcome
   cards = initial_round
-  while card_total <= 21
-    display_cards(cards)
-    card_total = hit?(cards)
+  
+  loop do
+    card_total = get_card_total(cards)
+    display_cards_and_total(cards)
+    break if card_total > 21
+    cards = hit?(cards)
   end
-  end_game(card_total)
+  
+  end_game(cards)
 end
-
-total = get_card_total(["A","A","Q"])
-puts total
